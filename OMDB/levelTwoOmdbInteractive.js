@@ -1,6 +1,28 @@
 // Include the request npm package (Don't forget to run "npm install request" in this folder first!)
 var request = require("request");
 
+// var action = process.argv[2];
+// var value = process.argv[3];
+
+// switch (action) {
+// case "movie-this":
+//   request();
+//   break;
+
+// case "deposit":
+//   deposit();
+//   break;
+
+// case "withdraw":
+//   withdraw();
+//   break;
+
+// case "lotto":
+//   lotto();
+//   break;
+// }
+
+
 // Store all of the arguments in an array
 var nodeArgs = process.argv;
 
@@ -9,9 +31,9 @@ var movieName = "";
 
 // Loop through all the words in the node argument
 // And do a little for-loop magic to handle the inclusion of "+"s
-for (var i = 2; i < nodeArgs.length; i++) {
+for (var i = 3; i < nodeArgs.length; i++) {
 
-  if (i > 2 && i < nodeArgs.length) {
+  if (i > 3 && i < nodeArgs.length) {
 
     movieName = movieName + "+" + nodeArgs[i];
 
