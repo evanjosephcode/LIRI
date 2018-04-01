@@ -31,9 +31,9 @@ var movieName = "";
 
 // Loop through all the words in the node argument
 // And do a little for-loop magic to handle the inclusion of "+"s
-for (var i = 3; i < nodeArgs.length; i++) {
+for (var i = 2; i < nodeArgs.length; i++) {
 
-  if (i > 3 && i < nodeArgs.length) {
+  if (i > 2 && i < nodeArgs.length) {
 
     movieName = movieName + "+" + nodeArgs[i];
 
