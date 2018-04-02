@@ -1,26 +1,88 @@
-require("dotenv").config();
-// Include the request npm package
+require('dotenv').config();
 var request = require("request");
+var keys = require("./keys");
+var Twitter = require('twitter');
 
-// Include the request npm package (Don't forget to run "npm install request" in this folder first!)
-var request = require("request");
 
-// Grab the movieName which will always be the third node argument.
-var movieName = process.argv[2];
+var nodeArgs = process.argv;
 
-// Then run a request to the OMDB API with the movie specified
-var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+var action = process.argv[2];
 
-// This line is just to help us debug against the actual URL.
-console.log(queryUrl);
+switch (action) {
+  case "my-tweets":
+    // tweets();
+    console.log("twitter action here");
+    break;
 
-request(queryUrl, function(error, response, body) {
+  case "movie-this":
+    movie();
+    break;
 
-  // If the request is successful
-  if (!error && response.statusCode === 200) {
+  case "do-what-it-says":
+    // random();
+    console.log("do what it says action");
+    break;
 
-    // Parse the body of the site and recover just the imdbRating
-    // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
-    console.log("Release Year: " + JSON.parse(body).Year);
+  case "placeholder":
+    // placeholder();
+    console.log("placeholder stuffs");
+    break;
+
+  default:
+    console.log("you have to feed LIRI a command");
+}
+
+
+// movie function
+function movie() {
+  var movieName = "";
+
+  if (nodeArgs.length < 4) {
+    movieName = "mr+nobody";
+  } else {
+    if (nodeArgs.length > 4) {
+      for (var i = 3; i < nodeArgs.length; i++) {
+        movieName = movieName + "+" + nodeArgs[i];
+      }
+    } else {
+      movieName = nodeArgs[3];
+    }
   }
-});
+
+  var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+
+  request(queryUrl, function (error, response, body) {
+
+    // If the request is successful
+    if (!error && response.statusCode === 200) {
+      console.log("* " + JSON.parse(body).Title);
+      console.log("* " + JSON.parse(body).Year);
+      console.log("* " + JSON.parse(body).Ratings[0].Value);
+      console.log("* " + JSON.parse(body).Ratings[1].Value);
+      console.log("* " + JSON.parse(body).Country);
+      console.log("* " + JSON.parse(body).Plot);
+      console.log("* " + JSON.parse(body).Actors);
+    }
+  });
+}
+
+// Function for Twitter
+function tweets() {
+  var client = new Twitter(keys.twitter);
+
+  var client = new Twitter({
+    consumer_key: process.env.TWITTER_CONSUMER_KEY,
+    consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+    access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+    access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+  });
+
+  var params = {
+    screen_name: 'nodejs'
+  };
+  client.get('statuses/user_timeline', params, function (error, tweets, response) {
+    if (!error) {
+      console.log(tweets);
+    }
+  });
+}
