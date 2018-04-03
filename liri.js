@@ -10,8 +10,7 @@ var action = process.argv[2];
 
 switch (action) {
   case "my-tweets":
-    // tweets();
-    console.log("twitter action here");
+    tweets();
     break;
 
   case "movie-this":
@@ -78,11 +77,18 @@ function tweets() {
   });
 
   var params = {
-    screen_name: 'nodejs'
+    screen_name: 'evanjosephcode',
+    count: 20, 
+    tweet_mode: 'extended'
   };
   client.get('statuses/user_timeline', params, function (error, tweets, response) {
-    if (!error) {
-      console.log(tweets);
+    // var counter = tweets.length;
+    if (!error) 
+      for (var i = 0; i < tweets.length; i++ ) {
+      // console.log(tweets);
+      // console.log(tweets[i].created_at);
+      console.log("text   :  " + tweets[i].full_text);
+      console.log("created:  " + tweets[i].created_at);
     }
   });
 }
