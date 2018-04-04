@@ -7,7 +7,6 @@ var Twitter = require('twitter');
 
 
 var nodeArgs = process.argv;
-
 var action = process.argv[2];
 
 switch (action) {
@@ -21,11 +20,10 @@ switch (action) {
 
   case "do-what-it-says":
     random();
-    console.log("do what it says action");
     break;
 
   case "spotify-this":
-    spotifysearch();
+    spotifysearch(process.argv[3]);
     break;
 
   default:
@@ -34,7 +32,7 @@ switch (action) {
 
 
 // movie function
-function movie() {
+function movie(movieName) {
   var movieName = "";
 
   if (nodeArgs.length < 4) {
@@ -53,7 +51,6 @@ function movie() {
 
   request(queryUrl, function (error, response, body) {
 
-    // If the request is successful
     if (!error && response.statusCode === 200) {
       console.log("* " + JSON.parse(body).Title);
       console.log("* " + JSON.parse(body).Year);
@@ -66,7 +63,7 @@ function movie() {
   });
 }
 
-// Function for Twitter
+// twitter function
 function tweets() {
   var client = new Twitter(keys.twitter);
 
@@ -83,18 +80,16 @@ function tweets() {
     tweet_mode: 'extended'
   };
   client.get('statuses/user_timeline', params, function (error, tweets, response) {
-    // var counter = tweets.length;
     if (!error)
       for (var i = 0; i < tweets.length; i++) {
-        // console.log(tweets);
-        // console.log(tweets[i].created_at);
         console.log("text   :  " + tweets[i].full_text);
         console.log("created:  " + tweets[i].created_at);
       }
   });
 }
 
-function spotifysearch() {
+// spotify function
+function spotifysearch(songName) {
   var spotify = new Spotify({
     id: process.env.SPOTIFY_ID,
     secret: process.env.SPOTIFY_SECRET
@@ -102,38 +97,40 @@ function spotifysearch() {
 
   spotify.search({
     type: 'track',
-    query: 'All the Small Things'
+    query: songName,
+
   }, function (err, data) {
     if (err) {
       return console.log('Error occurred: ' + err);
     }
 
-    // console.log(JSON.stringify(tracks.items[0].album.available_markets[1].data)); 
-    console.log(data);
-  });
+    // else if (process.argv[3] === "") {
+    //   songName = "The Sign";
+    // }
 
-function random() {
-  fs.readFile("random.txt", "utf8", function(err, data) {
-    if (err) {
-      return console.log(err);
-    }
-  
-    // Break the string down by comma separation and store the contents into the output array.
-    var output = data.split(",");
-  
-    // Loop Through the newly created output array
-    for (var i = 1; i < output.length; i++) {
-  
-      // Print each element (item) of the array/
-      // console.log(output[i]);
-      // output[0] = process.argv[2];
-      output[1] = output[i];
-      output[1] = query;
-      spotifysearch(query);
-
-
+    else {
+    console.log(JSON.stringify(data.tracks.items[0].name));
+    console.log(JSON.stringify(data.tracks.items[0].artists[0].name));
+    console.log(JSON.stringify(data.tracks.items[0].album.name));
+    console.log(JSON.stringify(data.tracks.items[0].preview_url));
     }
   });
 }
 
-};
+// random function for reading txt
+function random() {
+  fs.readFile("random.txt", "utf8", function (err, data) {
+    if (err) {
+      return console.log(err);
+    }
+
+    var output = data.split(",");
+    if (output[0] === "spotify-this-song") {
+      spotifysearch(output[1]);
+    } else if (output[0] === "movie-this") {
+      movie(output[1]);
+    } else {
+      console.log("this is not a valid command in your random file as the argument");
+    }
+  });
+}
