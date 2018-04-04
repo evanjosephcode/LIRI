@@ -1,5 +1,6 @@
 require('dotenv').config();
 var request = require("request");
+var fs = require("fs");
 var keys = require("./keys");
 var Spotify = require('node-spotify-api');
 var Twitter = require('twitter');
@@ -19,13 +20,12 @@ switch (action) {
     break;
 
   case "do-what-it-says":
-    // random();
+    random();
     console.log("do what it says action");
     break;
 
   case "spotify-this":
     spotifysearch();
-    console.log("placeholder stuffs");
     break;
 
   default:
@@ -109,7 +109,31 @@ function spotifysearch() {
     }
 
     // console.log(JSON.stringify(tracks.items[0].album.available_markets[1].data)); 
-    // console.log()
+    console.log(data);
   });
+
+function random() {
+  fs.readFile("random.txt", "utf8", function(err, data) {
+    if (err) {
+      return console.log(err);
+    }
+  
+    // Break the string down by comma separation and store the contents into the output array.
+    var output = data.split(",");
+  
+    // Loop Through the newly created output array
+    for (var i = 1; i < output.length; i++) {
+  
+      // Print each element (item) of the array/
+      // console.log(output[i]);
+      // output[0] = process.argv[2];
+      output[1] = output[i];
+      output[1] = query;
+      spotifysearch(query);
+
+
+    }
+  });
+}
 
 };
