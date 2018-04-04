@@ -79,34 +79,37 @@ function tweets() {
 
   var params = {
     screen_name: 'evanjosephcode',
-    count: 20, 
+    count: 20,
     tweet_mode: 'extended'
   };
   client.get('statuses/user_timeline', params, function (error, tweets, response) {
     // var counter = tweets.length;
-    if (!error) 
-      for (var i = 0; i < tweets.length; i++ ) {
-      // console.log(tweets);
-      // console.log(tweets[i].created_at);
-      console.log("text   :  " + tweets[i].full_text);
-      console.log("created:  " + tweets[i].created_at);
-    }
+    if (!error)
+      for (var i = 0; i < tweets.length; i++) {
+        // console.log(tweets);
+        // console.log(tweets[i].created_at);
+        console.log("text   :  " + tweets[i].full_text);
+        console.log("created:  " + tweets[i].created_at);
+      }
   });
 }
 
-function spotifysearch() { 
-var spotify = new Spotify({
-  id: process.env.SPOTIFY_ID,
-  secret: process.env.SPOTIFY_SECRET
-});
- 
-spotify.search({ type: 'track', query: 'All the Small Things' }, function(err, data) {
-  if (err) {
-    return console.log('Error occurred: ' + err);
-  }
- 
-// console.log(JSON.stringify(tracks.items[0].album.available_markets[1].data)); 
-// console.log()
-});
+function spotifysearch() {
+  var spotify = new Spotify({
+    id: process.env.SPOTIFY_ID,
+    secret: process.env.SPOTIFY_SECRET
+  });
+
+  spotify.search({
+    type: 'track',
+    query: 'All the Small Things'
+  }, function (err, data) {
+    if (err) {
+      return console.log('Error occurred: ' + err);
+    }
+
+    // console.log(JSON.stringify(tracks.items[0].album.available_markets[1].data)); 
+    // console.log()
+  });
 
 };
