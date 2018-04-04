@@ -1,6 +1,7 @@
 require('dotenv').config();
 var request = require("request");
 var keys = require("./keys");
+var Spotify = require('node-spotify-api');
 var Twitter = require('twitter');
 
 
@@ -22,8 +23,8 @@ switch (action) {
     console.log("do what it says action");
     break;
 
-  case "placeholder":
-    // placeholder();
+  case "spotify-this":
+    spotifysearch();
     console.log("placeholder stuffs");
     break;
 
@@ -92,3 +93,20 @@ function tweets() {
     }
   });
 }
+
+function spotifysearch() { 
+var spotify = new Spotify({
+  id: process.env.SPOTIFY_ID,
+  secret: process.env.SPOTIFY_SECRET
+});
+ 
+spotify.search({ type: 'track', query: 'All the Small Things' }, function(err, data) {
+  if (err) {
+    return console.log('Error occurred: ' + err);
+  }
+ 
+// console.log(JSON.stringify(tracks.items[0].album.available_markets[1].data)); 
+// console.log()
+});
+
+};
