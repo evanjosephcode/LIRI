@@ -12,4 +12,4 @@ commands:
 -'spotify-this' for info about a song and 30-second clip (if applicable)
 -'do-what-it-says' for random.txt read/initiate command (configured for spotify and OMDB use)
 
-###Enjoy! 
+Enjoy! 

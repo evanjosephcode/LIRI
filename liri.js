@@ -41,7 +41,7 @@ function movie(movieName) {
   }
 
   if (!movieName) {
-    movieName = "mr+robot"
+    movieName = "big+lebowski"
   }
 
   var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
@@ -79,6 +79,7 @@ function tweets() {
     count: 20,
     tweet_mode: 'extended'
   };
+
   client.get('statuses/user_timeline', params, function (error, tweets, response) {
     if (!error)
       for (var i = 0; i < tweets.length; i++) {
