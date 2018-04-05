@@ -23,28 +23,25 @@ switch (action) {
     break;
 
   case "spotify-this":
-    spotifysearch(process.argv[3]);
+    spotifysearch();
     break;
 
   default:
     console.log("you have to feed LIRI a command");
 }
 
+function getExtraArguments() {
+  return nodeArgs.slice(3).join("+");
+}
 
 // movie function
 function movie(movieName) {
-  var movieName = "";
+  if (!movieName) {
+    movieName = getExtraArguments();
+  }
 
-  if (nodeArgs.length < 4) {
-    movieName = "mr+nobody";
-  } else {
-    if (nodeArgs.length > 4) {
-      for (var i = 3; i < nodeArgs.length; i++) {
-        movieName = movieName + "+" + nodeArgs[i];
-      }
-    } else {
-      movieName = nodeArgs[3];
-    }
+  if (!movieName) {
+    movieName = "mr+robot"
   }
 
   var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
@@ -52,13 +49,16 @@ function movie(movieName) {
   request(queryUrl, function (error, response, body) {
 
     if (!error && response.statusCode === 200) {
-      console.log("* " + JSON.parse(body).Title);
-      console.log("* " + JSON.parse(body).Year);
-      console.log("* " + JSON.parse(body).Ratings[0].Value);
-      console.log("* " + JSON.parse(body).Ratings[1].Value);
-      console.log("* " + JSON.parse(body).Country);
-      console.log("* " + JSON.parse(body).Plot);
-      console.log("* " + JSON.parse(body).Actors);
+      var data = JSON.parse(body);
+      console.log("* " + data.Title);
+      console.log("* " + data.Year);
+      console.log("* " + data.Ratings[0].Value);
+      if (data.Ratings[1]) {
+        console.log("* " + data.Ratings[1].Value);
+      }
+      console.log("* " + data.Country);
+      console.log("* " + data.Plot);
+      console.log("* " + data.Actors);
     }
   });
 }
@@ -89,11 +89,22 @@ function tweets() {
 }
 
 // spotify function
-function spotifysearch(songName) {
+function spotifysearch(arg) {
   var spotify = new Spotify({
     id: process.env.SPOTIFY_ID,
     secret: process.env.SPOTIFY_SECRET
   });
+
+  songName = arg ? arg : "";
+
+  if (songName === "") {
+    songName = getExtraArguments();
+  }
+
+  // for blank inputs
+  if (!process.argv[3] && songName === "") {
+    songName = "Over the Hills and Far Away";
+  }
 
   spotify.search({
     type: 'track',
@@ -103,17 +114,11 @@ function spotifysearch(songName) {
     if (err) {
       return console.log('Error occurred: ' + err);
     }
-
-    // else if (process.argv[3] === "") {
-    //   songName = "The Sign";
-    // }
-
-    else {
-    console.log(JSON.stringify(data.tracks.items[0].name));
-    console.log(JSON.stringify(data.tracks.items[0].artists[0].name));
-    console.log(JSON.stringify(data.tracks.items[0].album.name));
-    console.log(JSON.stringify(data.tracks.items[0].preview_url));
-    }
+    var data = data.tracks.items[0];
+    console.log(data.name);
+    console.log(data.artists[0].name);
+    console.log(data.album.name);
+    console.log(data.preview_url);
   });
 }
 
@@ -130,7 +135,7 @@ function random() {
     } else if (output[0] === "movie-this") {
       movie(output[1]);
     } else {
-      console.log("this is not a valid command in your random file as the argument");
+      console.log("this is not a valid argument, muHAHAHAHAH");
     }
   });
 }
